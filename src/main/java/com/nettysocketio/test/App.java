@@ -9,7 +9,6 @@ public class App {
         Configuration config = new Configuration();
         config.setHostname("192.168.1.101");
         config.setPort(9092);
-
         SocketIOServer server = new SocketIOServer(config);
         ChateventListener listner = new ChateventListener();
         listner. setServer(server);

@@ -32,6 +32,5 @@ public class ChateventListener implements DataListener<ChatObject> {
     	}
     	//data.setMessage(StringUtils.filterEmoji(data.getMessage(), ""));
         // chatevent为 事件的名称， data为发送的内容
-      
     }
 }

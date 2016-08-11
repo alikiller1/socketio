@@ -7,7 +7,7 @@ public class App {
     public static void main(String[] args) throws InterruptedException
     {
         Configuration config = new Configuration();
-        config.setHostname("192.168.1.101");
+        config.setHostname("10.5.4.231");
         config.setPort(9092);
         SocketIOServer server = new SocketIOServer(config);
         ChateventListener listner = new ChateventListener();

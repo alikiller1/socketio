@@ -38,16 +38,15 @@ public class ChateventListener implements DataListener<ChatObject> {
 			params.add(msg);
 			new Thread() {
 				public void run() {
-					String sql = "insert into user_chat_info (ip,type,message) values ('"+params.get(0)+"','"+params.get(1)+"','"+params.get(2)+"')";
-					//String sql = "INSERT INTO user_chat_info (ip,type,message) VALUES (?,?,?)";
+					String sql = "INSERT INTO user_chat_info (ip,type,message) VALUES (?,?,?)";
 					System.out.println(sql);
 					try {
 						Connection conn=DBUtil.getConnection();
 						PreparedStatement pst = conn.prepareStatement(sql);
-					/*	pst.setString(1, params.get(0) + "");
+						pst.setString(1, params.get(0) + "");
 					 	pst.setString(2, params.get(1) + "");
-						pst.setString(3, params.get(2) + "");*/
-						pst.executeUpdate(sql);
+						pst.setString(3, params.get(2) + "");
+						pst.execute();
 						DBUtil.closeCon(null, null, pst, conn);
 					} catch (SQLException e) {
 						e.printStackTrace();

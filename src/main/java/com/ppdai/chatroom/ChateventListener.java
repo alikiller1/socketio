@@ -2,7 +2,9 @@ package com.ppdai.chatroom;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.ResultSet;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,9 +32,38 @@ public class ChateventListener implements DataListener<ChatObject> {
 	}
 
 	public void onData(SocketIOClient client, ChatObject data, AckRequest ackSender) throws Exception {
-		String ip = client.getRemoteAddress().toString().replace("/", "").split(":")[0];
+		String ip = client.getRemoteAddress().toString().replace("/", "").split(":")[0].trim();
+		String content=data.getContent();
 		data.setIp(ip);
-		System.out.println("收到的数据-->"+data);
+		System.out.println("收到的数据-->" + data);
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		long insertime = 0l;
+		long now = System.currentTimeMillis();
+		String sql = "SELECT MAX(inserttime) FROM user_chat_info WHERE ip = ? ";
+		try {
+			PreparedStatement pst = DBUtil.getConnection().prepareStatement(sql);
+			pst.setString(1, ip);
+			ResultSet rs = pst.executeQuery();
+			while (rs.next()) {
+				insertime = dateFormat.parse(rs.getString(1)).getTime();
+			}
+			DBUtil.closeCon(rs, pst, null, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return;
+		}
+		if ((now - insertime) < 3000) {
+			data.setName("管理员");
+			data.setContent("您发言太快！");
+			this.server.getClient(client.getSessionId()).sendEvent("chatevent", data);
+			return;
+		}
+		if(content.contains("习近平")||content.contains("你我货")){
+			data.setName("管理员");
+			data.setContent("您的发言包含敏感词汇！");
+			this.server.getClient(client.getSessionId()).sendEvent("chatevent", data);
+			return;
+		}
 		if (StringUtils.isNotBlank(data.getContent())) {
 			String type = data.getType();
 			if (null != type) {
@@ -74,15 +105,16 @@ public class ChateventListener implements DataListener<ChatObject> {
 					String sql = "INSERT INTO user_chat_info (ip,user_type,name,content,msg_desc) VALUES (?,?,?,?,?)";
 					System.out.println(sql);
 					Connection conn = DBUtil.getConnection();
-					try{
-					PreparedStatement pst = conn.prepareStatement(sql);
-					pst.setString(1, params.get(0) + "");
-					pst.setString(2, params.get(1) + "");
-					pst.setString(3, params.get(2) + "");
-					pst.setString(4, params.get(3) + "");
-					pst.setString(5, params.get(4) + "");
-					pst.execute();
-					}catch(Exception e){
+					try {
+						PreparedStatement pst = conn.prepareStatement(sql);
+						pst.setString(1, params.get(0) + "");
+						pst.setString(2, params.get(1) + "");
+						pst.setString(3, params.get(2) + "");
+						pst.setString(4, params.get(3) + "");
+						pst.setString(5, params.get(4) + "");
+						pst.execute();
+						DBUtil.closeCon(null, pst, null, null);
+					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				};

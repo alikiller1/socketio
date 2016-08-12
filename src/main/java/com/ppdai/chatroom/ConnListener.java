@@ -7,18 +7,19 @@ import com.ppdai.chatroom.data.ChatObject;
 
 public class ConnListener implements ConnectListener {
 
-    SocketIOServer server;
+	SocketIOServer server;
 
-    public void setServer(SocketIOServer server) {
-        this.server = server;
-    }
+	public void setServer(SocketIOServer server) {
+		this.server = server;
+	}
 
 	@Override
 	public void onConnect(SocketIOClient client) {
-		System.out.println("有一个新的连接");
-	for(ChatObject o:ChateventListener.recentData){
+		String ip = client.getRemoteAddress().toString().replace("/", "").split(":")[0];
+		System.out.println("有一个新的连接:" + ip);
+		for (ChatObject o : ChateventListener.recentData) {
 			this.server.getClient(client.getSessionId()).sendEvent("chatevent", o);
 		}
 	}
-    
+
 }

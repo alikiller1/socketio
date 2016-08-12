@@ -42,7 +42,8 @@ body {
     </form>
 </body>
 <script type="text/javascript">
-    var socket = io.connect('http://172.20.10.2:9092');
+    //var socket = io.connect('http://172.20.10.2:9092');
+    var socket = io.connect('http://192.168.1.101:9092');
     //var socket = io.connect('http://10.5.3.148:9092');
   
     socket.on('connect',function() {
@@ -51,7 +52,7 @@ body {
     
     socket.on('chatevent', function(data) {
     	console.log(data);
-        output('<span class="username-msg">' +data.ip+'用户'+data.name + ' : </span>'
+        output('<span class="username-msg">' +data.name + ' : </span>'
                 + data.content);
     });
     

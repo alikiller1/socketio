@@ -28,7 +28,7 @@ public class DataParseUtils{
 	 * 查询借款列表
 	 * @throws IOException
 	 */
-	public static void queryList(String url) throws IOException {
+	public static List<LoanInfo> queryList(String url) throws IOException {
 		Document doc = Jsoup.connect(url).get();
 		Elements root = doc.getElementsByAttributeValue("class", "clearfix");
 		Iterator<Element> es = root.iterator();
@@ -71,10 +71,11 @@ public class DataParseUtils{
 				list.add(loanInfo);
 			}
 		}
-		for (LoanInfo loanInfo : list) {
+		return list;
+		/*for (LoanInfo loanInfo : list) {
 			System.out.println(loanInfo);
 		}
-		System.out.println("count=" + count);
+		System.out.println("count=" + count);*/
 	}
 	
 	/**

@@ -35,7 +35,7 @@ public class ChateventListener implements DataListener<ChatObject> {
 		String ip = client.getRemoteAddress().toString().replace("/", "").split(":")[0].trim();
 		String content=data.getContent();
 		data.setIp(ip);
-		System.out.println("收到的数据-->" + data);
+		System.out.println("收到数据:"+ip+"-->" + data);
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		long insertime = 0l;
 		long now = System.currentTimeMillis();
@@ -52,14 +52,16 @@ public class ChateventListener implements DataListener<ChatObject> {
 			e.printStackTrace();
 			return;
 		}
+		//防止刷数据
 		if ((now - insertime) < 3000) {
-			data.setName("管理员");
+			data.setName("系统消息");
 			data.setContent("您发言太快！");
 			this.server.getClient(client.getSessionId()).sendEvent("chatevent", data);
 			return;
 		}
+		//敏感信息校验
 		if(content.contains("习近平")||content.contains("你我货")){
-			data.setName("管理员");
+			data.setName("系统消息");
 			data.setContent("您的发言包含敏感词汇！");
 			this.server.getClient(client.getSessionId()).sendEvent("chatevent", data);
 			return;
@@ -73,6 +75,7 @@ public class ChateventListener implements DataListener<ChatObject> {
 			if ("0".equals(type)) {
 				String loanid = data.getLoanid();
 				String loanUrl = Constants.loan_url_pre + loanid.trim();
+				//查询贷款详情
 				LoanInfo loanInfo = DataParseUtils.queryInfo(loanUrl);
 				data.setLoanInfo(loanInfo);
 			}
@@ -94,6 +97,7 @@ public class ChateventListener implements DataListener<ChatObject> {
 			}
 
 			String msg = StringUtils.filterEmoji(data.getContent(), "");
+			//数据入库
 			final List<Object> params = new ArrayList<>();
 			params.add(ip);
 			params.add(data.getUserType() == null ? 3 : data.getUserType());

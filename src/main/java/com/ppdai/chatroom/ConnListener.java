@@ -17,6 +17,7 @@ public class ConnListener implements ConnectListener {
 	public void onConnect(SocketIOClient client) {
 		String ip = client.getRemoteAddress().toString().replace("/", "").split(":")[0];
 		System.out.println("有一个新的连接:" + ip);
+		System.out.println("当前在线人数："+this.server.getAllClients().size());
 		for (ChatObject o : ChateventListener.recentData) {
 			this.server.getClient(client.getSessionId()).sendEvent("chatevent", o);
 		}

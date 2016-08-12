@@ -1,8 +1,9 @@
-package com.nettysocketio.test;
+package com.ppdai.chatroom;
 
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.ConnectListener;
+import com.ppdai.chatroom.data.ChatObject;
 
 public class ConnListener implements ConnectListener {
 
@@ -14,13 +15,10 @@ public class ConnListener implements ConnectListener {
 
 	@Override
 	public void onConnect(SocketIOClient client) {
-		for(ChatObject o:ChateventListener.oldData){
+		System.out.println("有一个新的连接");
+	for(ChatObject o:ChateventListener.recentData){
 			this.server.getClient(client.getSessionId()).sendEvent("chatevent", o);
 		}
-		
 	}
-
-
-
     
 }

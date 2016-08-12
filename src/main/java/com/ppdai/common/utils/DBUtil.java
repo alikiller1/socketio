@@ -1,4 +1,4 @@
-package com.nettysocketio.test;
+package com.ppdai.common.utils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -42,15 +42,17 @@ body {
     </form>
 </body>
 <script type="text/javascript">
-    var socket = io.connect('http://10.5.4.231:9092');
+    var socket = io.connect('http://172.20.10.2:9092');
+    //var socket = io.connect('http://10.5.3.148:9092');
+  
     socket.on('connect',function() {
         output('<span class="connect-msg">Client has connected to the server!</span>');
     });
     
     socket.on('chatevent', function(data) {
     	console.log(data);
-        output('<span class="username-msg">' +data.ip+'用户'+data.userName + ' : </span>'
-                + data.message);
+        output('<span class="username-msg">' +data.ip+'用户'+data.name + ' : </span>'
+                + data.content);
     });
     
     socket.on('disconnect',function() {
@@ -66,8 +68,8 @@ body {
         var message = $('#msg').val();
         $('#msg').val('');
         socket.emit('chatevent', {
-            userName : userName,
-            message : message
+            name : userName,
+            content : message
         });
     }
     

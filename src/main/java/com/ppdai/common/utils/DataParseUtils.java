@@ -17,11 +17,13 @@ import com.ppdai.chatroom.data.LoanInfo;
 
 public class DataParseUtils{
 	public static void main(String[] args) throws IOException {
-		String url = "http://invest.ppdai.com/loan/list_safe_s1_p1?Rate=0";
-		String s="我的http://www.ppdai.com/list/17025228";
-		System.out.println(filterLoanInfoUrl(s));
-		System.out.println(isLoanInfoUrl("http://www.ppdai.com/list/17025228"));
-		System.out.println(queryInfo( "http://www.ppdai.com/list/17025228"));
+		//String url = "http://invest.ppdai.com/loan/list_safe_s1_p1?Rate=0";
+		//String s="我的http://www.ppdai.com/list/17025228";
+		//System.out.println(filterLoanInfoUrl(s));
+	//	System.out.println(isLoanInfoUrl("http://www.ppdai.com/list/17025228"));
+		//System.out.println(queryInfo( "http://www.ppdai.com/list/17025228"));
+		
+		queryList("http://invest.ppdai.com/loan/list_safe_s1_p1?Rate=0");
 	}
 	
 	/***
@@ -47,7 +49,9 @@ public class DataParseUtils{
 					loanInfo.setUrl(loanUrl);
 					break;
 				}
-				String userName = ele.select(".userInfo").get(0).getElementsByTag("a").get(0).text();
+				//System.out.println(ele);
+				Element e = ele.getElementsByTag("p").get(0).getElementsByTag("a").get(0);
+				String userName=e.text();
 				loanInfo.setUserName(userName);
 
 				String rete = ele.select(".brate").get(0).text().trim().replace("%", "");
@@ -71,11 +75,12 @@ public class DataParseUtils{
 				list.add(loanInfo);
 			}
 		}
-		return list;
-		/*for (LoanInfo loanInfo : list) {
+	
+	/*	for (LoanInfo loanInfo : list) {
 			System.out.println(loanInfo);
 		}
 		System.out.println("count=" + count);*/
+		return list;
 	}
 	
 	/**

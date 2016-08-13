@@ -7,77 +7,87 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Socketio chat</title>
 <script src="./jquery-1.9.1.min.js" type="text/javascript"></script>
-<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+<script src="./socket.io-1.4.5.js"></script>
 <style>
 body {
-    padding: 20px;
+	padding: 20px;
 }
+
 #console {
-    height: 400px;
-    overflow: auto;
+	height: 400px;
+	overflow: auto;
 }
+
 .username-msg {
-    color: orange;
+	color: orange;
 }
+
 .connect-msg {
-    color: green;
+	color: green;
 }
+
 .disconnect-msg {
-    color: red;
+	color: red;
 }
+
 .send-msg {
-    color: #888
+	color: #888
 }
 </style>
 </head>
 <body>
-    <h1>Netty-socketio chat demo</h1>
-    <br />
-    <div id="console" class="well"></div>
-    <form class="well form-inline" onsubmit="return false;">
-        <input id="name" class="input-xlarge" type="text" placeholder="用户名称. . . " />
-        <input id="msg" class="input-xlarge" type="text" placeholder="发送内容. . . " />
-        <button type="button" onClick="sendMessage()" class="btn">Send</button>
-        <button type="button" onClick="sendDisconnect()" class="btn">Disconnect</button>
-    </form>
+	<h1>Netty-socketio chat demo</h1>
+	<br />
+	<div id="console" class="well"></div>
+	<form class="well form-inline" onsubmit="return false;">
+		<input id="name" class="input-xlarge" type="text"
+			placeholder="用户名称. . . " /> <input id="msg" class="input-xlarge"
+			type="text" placeholder="发送内容. . . " />
+		<button type="button" onClick="sendMessage()" class="btn">Send</button>
+		<button type="button" onClick="sendDisconnect()" class="btn">Disconnect</button>
+	</form>
 </body>
 <script type="text/javascript">
-    //var socket = io.connect('http://172.20.10.2:9092');
-   // var socket = io.connect('http://192.168.1.101:9092');
-    var socket = io.connect('http://10.5.3.148:9092');
-  
-    socket.on('connect',function() {
-        output('<span class="connect-msg">Client has connected to the server!</span>');
-    });
-    
-    socket.on('chatevent', function(data) {
-    	console.log(data);
-        output('<span class="username-msg">' +data.name + ' : </span>'
-                + data.content);
-    });
-    
-    socket.on('disconnect',function() {
-        output('<span class="disconnect-msg">The client has disconnected! </span>');
-    });
-    
-    function sendDisconnect() {
-        socket.disconnect();
-    }
-    
-    function sendMessage() {
-        var userName = $("#name").val()
-        var message = $('#msg').val();
-        $('#msg').val('');
-        socket.emit('chatevent', {
-            name : userName,
-            content : message
-        });
-    }
-    
-    function output(message) {
-        var currentTime = "<span class='time' >" + new Date() + "</span>";
-        var element = $("<div>" + currentTime + " " + message + "</div>");
-        $('#console').prepend(element);
-    }
+	var socket = io.connect('http://192.168.1.101:9092');
+
+	socket
+			.on(
+					'connect',
+					function() {
+						output('<span class="connect-msg">Client has connected to the server!</span>');
+					});
+
+	socket.on('chatevent', function(data) {
+		console.log(data);
+		output('<span class="username-msg">' + data.name + ' : </span>'
+				+ data.content);
+	});
+
+	socket
+			.on(
+					'disconnect',
+					function() {
+						output('<span class="disconnect-msg">The client has disconnected! </span>');
+					});
+
+	function sendDisconnect() {
+		socket.disconnect();
+	}
+
+	function sendMessage() {
+		var userName = $("#name").val()
+		var message = $('#msg').val();
+		$('#msg').val('');
+		socket.emit('chatevent', {
+			name : userName,
+			content : message
+		});
+	}
+
+	function output(message) {
+		var currentTime = "<span class='time' >" + new Date() + "</span>";
+		var element = $("<div>" + currentTime + " " + message + "</div>");
+		$('#console').prepend(element);
+	}
 </script>
 </html>

@@ -1,15 +1,22 @@
 package com.ppdai.chatroom;
 
-import java.util.Timer;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import com.corundumstudio.socketio.Configuration;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.ppdai.chatroom.data.ChatObject;
 
 public class App {
-	public static void main(String[] args) throws InterruptedException {
+	
+	public static void main(String[] args) throws InterruptedException, UnknownHostException {
 		Configuration config = new Configuration();
-		config.setHostname("192.168.1.101");
+	//	String ip=InetAddress.getLocalHost().getAddress();
+		InetAddress addr = InetAddress.getLocalHost();
+		String ip=addr.getHostAddress().toString();//获得本机IP
+		String address=addr.getHostName().toString();//获得本机名称
+		System.out.println(ip+":"+address);
+		config.setHostname(ip);
 		config.setPort(9092);
 		SocketIOServer server = new SocketIOServer(config);
 		ChateventListener listner = new ChateventListener();
@@ -38,4 +45,6 @@ public class App {
 		Thread.sleep(Integer.MAX_VALUE);
 		server.stop();
 	}
+	
+	
 }

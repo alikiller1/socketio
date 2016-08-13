@@ -10,9 +10,11 @@ public class App {
     public static void main(String[] args) throws InterruptedException
     {
         Configuration config = new Configuration();
-       // config.setHostname("172.20.10.2");
+       config.setHostname("172.20.10.2");
        // config.setHostname("192.168.1.101");
-        config.setHostname("10.5.3.148");
+      //  config.setHostname("10.5.3.148");
+      // config.setHostname("172.20.10.8");
+       
         config.setPort(9092);
         SocketIOServer server = new SocketIOServer(config);
         ChateventListener listner = new ChateventListener();
@@ -28,7 +30,7 @@ public class App {
         
         //启动定时消息推送即将满标的借款
         ProgressLoanPushTimerTask task1=new ProgressLoanPushTimerTask(server);
-	    long intevalPeriod = 20 * 1*1000;  
+	    long intevalPeriod = 60*1000;  
 	    long delay =intevalPeriod;  
 	    Timer timer1 = new Timer();  
 	    timer1.scheduleAtFixedRate(task1, delay, intevalPeriod);  
@@ -36,7 +38,7 @@ public class App {
 	    //启动定时消息推送高收益的标
         HighrateLoanPushTimerTask task2=new HighrateLoanPushTimerTask(server);
 	    Timer timer2 = new Timer();  
-	    timer2.scheduleAtFixedRate(task2, delay+1000, intevalPeriod); 
+	    timer2.scheduleAtFixedRate(task2, delay+5000, intevalPeriod); 
 	    
         Thread.sleep(Integer.MAX_VALUE) ;
         server.stop();

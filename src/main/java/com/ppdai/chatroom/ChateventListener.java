@@ -56,16 +56,18 @@ public class ChateventListener implements DataListener<ChatObject> {
 		//防止刷数据
 		if ((now - insertime) < 3000) {
 			data.setName("系统消息");
-			data.setType("0");
+			data.setType("1");
 			data.setContent("您发言太快！");
+			data.setUserType("0");
 			this.server.getClient(client.getSessionId()).sendEvent("chatevent", data);
 			return;
 		}
 		//敏感信息校验
-		if(content.contains("习近平")||content.contains("你我货")){
+		if(content.contains("习近平")||content.contains("你我贷")){
 			data.setName("系统消息");
-			data.setType("0");
+			data.setType("1");
 			data.setContent("您的发言包含敏感词汇！");
+			data.setUserType("0");
 			this.server.getClient(client.getSessionId()).sendEvent("chatevent", data);
 			return;
 		}
@@ -110,7 +112,6 @@ public class ChateventListener implements DataListener<ChatObject> {
 			new Thread() {
 				public void run() {
 					String sql = "INSERT INTO user_chat_info (ip,user_type,name,content,msg_desc) VALUES (?,?,?,?,?)";
-					System.out.println(sql);
 					Connection conn = DBUtil.getConnection();
 					try {
 						PreparedStatement pst = conn.prepareStatement(sql);

@@ -42,9 +42,9 @@ body {
     </form>
 </body>
 <script type="text/javascript">
-    //var socket = io.connect('http://172.20.10.2:9092');
+    var socket = io.connect('http://172.20.10.2:9092');
    // var socket = io.connect('http://192.168.1.101:9092');
-    var socket = io.connect('http://10.5.3.148:9092');
+    //var socket = io.connect('http://10.5.3.148:9092');
   
     socket.on('connect',function() {
         output('<span class="connect-msg">Client has connected to the server!</span>');

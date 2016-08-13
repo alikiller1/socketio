@@ -29,8 +29,9 @@ public class ProgressLoanPushTimerTask extends TimerTask {
 		dataList=	DataParseUtils.queryList("http://invest.ppdai.com/loan/list_safe_s1_p1?Rate=0");
 		} catch (IOException e) {
 			e.printStackTrace();
+			return ;
 		}
-		if(!dataList.isEmpty()){
+		if(dataList!=null&&dataList.size()>0){
 			ChatObject data=new ChatObject();
 			data.setName("系统消息");
 			data.setType("0");
@@ -39,6 +40,7 @@ public class ProgressLoanPushTimerTask extends TimerTask {
 			data.setCurrenttime(currentTime);
 			data.setLoanInfo(dataList.get(0));
 			data.setContent("即将满标，快抢吧！");
+			data.setUserType("0");
 			System.out.println("消息定时推送->"+data);
 			this.server.getBroadcastOperations().sendEvent("chatevent", data);
 			// 保存最近的10条信息

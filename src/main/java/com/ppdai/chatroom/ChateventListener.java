@@ -39,13 +39,14 @@ public class ChateventListener implements DataListener<ChatObject> {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		long insertime = 0l;
 		long now = System.currentTimeMillis();
-		String sql = "SELECT MAX(inserttime) FROM user_chat_info WHERE ip = ? ";
+		String sql = "SELECT inserttime FROM user_chat_info WHERE ip = ? ORDER BY inserttime DESC LIMIT 1";
 		try {
 			PreparedStatement pst = DBUtil.getConnection().prepareStatement(sql);
 			pst.setString(1, ip);
 			ResultSet rs = pst.executeQuery();
 			while (rs.next()) {
-				insertime = dateFormat.parse(rs.getString(1)).getTime();
+				String temp=rs.getString(1);
+				insertime = dateFormat.parse(temp).getTime();
 			}
 			DBUtil.closeCon(rs, pst, null, null);
 		} catch (Exception e) {
@@ -55,6 +56,7 @@ public class ChateventListener implements DataListener<ChatObject> {
 		//防止刷数据
 		if ((now - insertime) < 3000) {
 			data.setName("系统消息");
+			data.setType("0");
 			data.setContent("您发言太快！");
 			this.server.getClient(client.getSessionId()).sendEvent("chatevent", data);
 			return;
@@ -62,6 +64,7 @@ public class ChateventListener implements DataListener<ChatObject> {
 		//敏感信息校验
 		if(content.contains("习近平")||content.contains("你我货")){
 			data.setName("系统消息");
+			data.setType("0");
 			data.setContent("您的发言包含敏感词汇！");
 			this.server.getClient(client.getSessionId()).sendEvent("chatevent", data);
 			return;

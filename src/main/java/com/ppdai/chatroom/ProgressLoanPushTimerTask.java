@@ -12,11 +12,11 @@ import com.ppdai.chatroom.data.ChatObject;
 import com.ppdai.chatroom.data.LoanInfo;
 import com.ppdai.common.utils.DataParseUtils;
 
-public class DataPushTimerTask extends TimerTask {
+public class ProgressLoanPushTimerTask extends TimerTask {
 	private SocketIOServer server;
 	
 	
-	public DataPushTimerTask(SocketIOServer server) {
+	public ProgressLoanPushTimerTask(SocketIOServer server) {
 		super();
 		this.server = server;
 	}
@@ -41,6 +41,13 @@ public class DataPushTimerTask extends TimerTask {
 			data.setContent("即将满标，快抢吧！");
 			System.out.println("消息定时推送->"+data);
 			this.server.getBroadcastOperations().sendEvent("chatevent", data);
+			// 保存最近的10条信息
+			if (ChateventListener.recentData.size() < 10) {
+				ChateventListener.recentData.add(data);
+			} else {
+				ChateventListener.recentData.remove(0);
+				ChateventListener.recentData.add(data);
+			}
 		}
 	}
 	

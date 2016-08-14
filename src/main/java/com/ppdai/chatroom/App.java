@@ -8,7 +8,6 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.ppdai.chatroom.data.ChatObject;
 
 public class App {
-	
 	public static void main(String[] args) throws InterruptedException, UnknownHostException {
 		Configuration config = new Configuration();
 	//	String ip=InetAddress.getLocalHost().getAddress();
@@ -45,6 +44,4 @@ public class App {
 		Thread.sleep(Integer.MAX_VALUE);
 		server.stop();
 	}
-	
-	
 }

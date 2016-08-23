@@ -20,7 +20,7 @@ public class DBUtil {
 			DBUtil.closeCon(rs, pst, null, connection);
 
 	}
-	public static Connection getConnection(){
+	public static synchronized Connection getConnection(){
 		if(null==connection){
 			try {
 				connection = DBUtil.getConnection(
@@ -32,7 +32,7 @@ public class DBUtil {
 		return connection;
 		 
 	}
-	public static Connection getConnection(String url, String user, String pw)
+	public static  Connection getConnection(String url, String user, String pw)
 			throws Exception {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");

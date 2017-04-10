@@ -55,7 +55,7 @@ body {
 					function() {
 						output('<span class="connect-msg">Client has connected to the server!</span>');
 					});
-
+	//chateven，服务端发错的消息类型
 	socket.on('chatevent', function(data) {
 		console.log(data);
 		output('<span class="username-msg">' + data.name + ' : </span>'

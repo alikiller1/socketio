@@ -21,9 +21,9 @@ public class DataParseUtils{
 		//String s="我的http://www.ppdai.com/list/17025228";
 		//System.out.println(filterLoanInfoUrl(s));
 	//	System.out.println(isLoanInfoUrl("http://www.ppdai.com/list/17025228"));
-		//System.out.println(queryInfo( "http://www.ppdai.com/list/17025228"));
+		System.out.println(queryInfo( "http://invest.ppdai.com/loan/info?id=41831725"));
 		
-		queryList("http://invest.ppdai.com/loan/list_safe_s1_p1?Rate=0");
+		//queryList("http://invest.ppdai.com/loan/listnew?LoanCategoryId=4");
 	}
 	
 	/***
@@ -76,10 +76,10 @@ public class DataParseUtils{
 			}
 		}
 	
-	/*	for (LoanInfo loanInfo : list) {
+		for (LoanInfo loanInfo : list) {
 			System.out.println(loanInfo);
 		}
-		System.out.println("count=" + count);*/
+		System.out.println("count=" + count);
 		return list;
 	}
 	

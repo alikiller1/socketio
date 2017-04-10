@@ -3,7 +3,9 @@ package com.ppdai.chatroom;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.TimerTask;
 
@@ -53,7 +55,29 @@ public class ProgressLoanPushTimerTask extends TimerTask {
 		}
 	}
 	
-	
+	public static void main(String[] args) {
+		List<String> list=new LinkedList<String>();
+		list.add("1");
+		list.add("2");
+		list.add("3");
+		list.remove(0);
+		list.add("4");
+		System.out.println(list.get(0));
+		for(String s:list){
+			System.out.println(s);
+		}
+		System.out.println("------------------------------");
+		List<String> list2=new ArrayList<String>();
+		list2.add("1");
+		list2.add("2");
+		list2.add("3");
+		list2.remove(0);
+		list2.add("4");
+		System.out.println(list2.get(0));
+		for(String s:list2){
+			System.out.println(s);
+		}
+	}
 	
 	
 

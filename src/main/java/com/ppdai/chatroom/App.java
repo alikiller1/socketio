@@ -40,7 +40,7 @@ public class App {
 		HighrateLoanPushTimerTask task2 = new HighrateLoanPushTimerTask(server);
 		Timer timer2 = new Timer();
 		timer2.scheduleAtFixedRate(task2, delay + 5000, intevalPeriod);*/
-		//test
+		//test2
 		Thread.sleep(Integer.MAX_VALUE);
 		server.stop();
 	}

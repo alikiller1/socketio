@@ -194,7 +194,7 @@ public class DataParseUtils {
 					e1.printStackTrace();
 				}
 				// System.out.println("i="+i);
-				conn = Jsoup.connect(url);
+				conn = Jsoup.connect(url).timeout(5000);
 				conn.data("pageNo", String.valueOf(i));
 				// 540//ADZUNlYwVTkFY1RgUDReYAo6VWUCZAJgBTMFMQBvU2I=
 				// 365//ADZUNlYwVTkFY1RgUDReYAo6VWUCZAJgBTMFNgBlU2Y=
@@ -278,7 +278,7 @@ public class DataParseUtils {
 		List<String> result = new ArrayList<String>();
 		Document doc = null;
 		Connection conn = null;
-		conn = Jsoup.connect(url);
+		conn = Jsoup.connect(url).timeout(5000);
 		doc = conn.post();
 		// Elements root=doc.getElementsByTag("div");
 		Elements root = doc.select("div[class=index_main w1180 clearfix]").get(1).select("a").select("[href^=https]");

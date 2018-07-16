@@ -2,7 +2,10 @@ package com.ppdai.common.utils;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.PreparedStatement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -18,7 +21,7 @@ import com.ppdai.chatroom.data.JoinRecord;
 import com.ppdai.chatroom.data.LoanInfo;
 
 public class DataParseUtils {
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		// String url = "http://invest.ppdai.com/loan/list_safe_s1_p1?Rate=0";
 		// String s="我的http://www.ppdai.com/list/17025228";
 		// System.out.println(filterLoanInfoUrl(s));
@@ -28,8 +31,9 @@ public class DataParseUtils {
 
 		// queryList("http://invest.ppdai.com/loan/listnew?LoanCategoryId=4");
 		// https://member.niwodai.com/portal/inteBid/joinRecoredPage.do
-		queryJoinRecord("https://member.niwodai.com/portal/inteBid/joinRecoredPage.do","http://www.niwodai.com/portal/getIntebidInfo.do");
-		//initKey("http://www.niwodai.com/portal/getIntebidInfo.do");
+		queryJoinRecord("https://member.niwodai.com/portal/inteBid/joinRecoredPage.do",
+				"http://www.niwodai.com/portal/getIntebidInfo.do");
+		// initKey("http://www.niwodai.com/portal/getIntebidInfo.do");
 	}
 
 	/***
@@ -172,12 +176,13 @@ public class DataParseUtils {
 	 * @return
 	 * @throws IOException
 	 */
-	public static List<JoinRecord> queryJoinRecord(String url,String url2) throws IOException {
+	public static List<JoinRecord> queryJoinRecord(String url, String url2) {
 		Document doc = null;
 		Connection conn = null;
 		BigDecimal sum = new BigDecimal(0);
 		List<JoinRecord> records = new ArrayList<JoinRecord>();
-		List<String> keys=initKey(url2);
+		try{
+		List<String> keys = initKey(url2);
 		for (String item : keys) {
 			BigDecimal sum2 = new BigDecimal(0);
 			List<JoinRecord> record2 = new ArrayList<JoinRecord>();
@@ -244,30 +249,47 @@ public class DataParseUtils {
 		System.out.println("sum=" + sum);
 		System.out.println(
 				"sum avg=" + (sum.divide(new BigDecimal(String.valueOf(records.size())), 0, BigDecimal.ROUND_HALF_UP)));
+
+		add(records.size(), sum);
 		return records;
+		}catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
-	public static List<String> initKey(String url) {
-		List<String> result=new ArrayList<String>();
+	public static void add(int size, BigDecimal sum) throws Exception {
+		java.sql.Connection conn = DBUtil.getConnection();
+		Date now = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		String date = formatter.format(now);
+		PreparedStatement pst = conn.prepareStatement("delete from invest_info where date=?");
+		pst.setString(1, date);
+		pst.execute();
+		pst = conn.prepareStatement("INSERT INTO invest_info VALUES(?,?,?)");
+		pst.setInt(1, size);
+		pst.setBigDecimal(2, sum);
+		pst.setString(3, date);
+		pst.execute();
+		DBUtil.closeCon(null, null, pst, conn);
+	}
+
+	public static List<String> initKey(String url) throws Exception {
+		List<String> result = new ArrayList<String>();
 		Document doc = null;
 		Connection conn = null;
-		try {
-			conn = Jsoup.connect(url);
-			doc = conn.post();
-			//Elements root=doc.getElementsByTag("div");
-			Elements root=doc.select("div[class=index_main w1180 clearfix]").get(1).select("a").select("[href^=https]");
-			Iterator<Element> it=root.iterator();
-			while(it.hasNext()){
-				Element e=it.next();
-				String item=e.attr("href").split("\\?")[1].split("\\&")[0].substring(10);
-				result.add(item);
-				System.out.println(item);
-			}
-			return result;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new ArrayList<String>();
+		conn = Jsoup.connect(url);
+		doc = conn.post();
+		// Elements root=doc.getElementsByTag("div");
+		Elements root = doc.select("div[class=index_main w1180 clearfix]").get(1).select("a").select("[href^=https]");
+		Iterator<Element> it = root.iterator();
+		while (it.hasNext()) {
+			Element e = it.next();
+			String item = e.attr("href").split("\\?")[1].split("\\&")[0].substring(10);
+			result.add(item);
+			System.out.println(item);
 		}
+		return result;
 
 	}
 }

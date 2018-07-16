@@ -28,7 +28,8 @@ public class DataParseUtils {
 
 		// queryList("http://invest.ppdai.com/loan/listnew?LoanCategoryId=4");
 		// https://member.niwodai.com/portal/inteBid/joinRecoredPage.do
-		queryJoinRecord("https://member.niwodai.com/portal/inteBid/joinRecoredPage.do");
+		queryJoinRecord("https://member.niwodai.com/portal/inteBid/joinRecoredPage.do","http://www.niwodai.com/portal/getIntebidInfo.do");
+		//initKey("http://www.niwodai.com/portal/getIntebidInfo.do");
 	}
 
 	/***
@@ -171,18 +172,14 @@ public class DataParseUtils {
 	 * @return
 	 * @throws IOException
 	 */
-	public static List<JoinRecord> queryJoinRecord(String url) throws IOException {
+	public static List<JoinRecord> queryJoinRecord(String url,String url2) throws IOException {
 		Document doc = null;
-		Connection conn =null;
-		BigDecimal sum=new BigDecimal(0);
+		Connection conn = null;
+		BigDecimal sum = new BigDecimal(0);
 		List<JoinRecord> records = new ArrayList<JoinRecord>();
-		String[] keys= {"ADZUNlYwVTkFY1RgUDReYAo6VWUCZAJgBTQFNgBuU2A=",
-				"ADZUNlYwVTkFY1RgUDReYAo6VWUCZAJgBTQFPQBiU24=",
-				"ADZUNlYwVTkFY1RgUDReYAo6VWUCZAJgBTQFPABiU2Y=",
-				"ADZUNlYwVTkFY1RgUDReYAo6VWUCZAJgBTMFNgBlU2Y=",
-				"ADZUNlYwVTkFY1RgUDReYAo6VWUCZAJgBTMFMQBvU2I="};
-		for(String item:keys) {
-			BigDecimal sum2=new BigDecimal(0);
+		List<String> keys=initKey(url2);
+		for (String item : keys) {
+			BigDecimal sum2 = new BigDecimal(0);
 			List<JoinRecord> record2 = new ArrayList<JoinRecord>();
 			for (int i = 1; i < 100; i++) {
 				try {
@@ -191,14 +188,14 @@ public class DataParseUtils {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				//System.out.println("i="+i);
-				conn=Jsoup.connect(url);
+				// System.out.println("i="+i);
+				conn = Jsoup.connect(url);
 				conn.data("pageNo", String.valueOf(i));
-				//540//ADZUNlYwVTkFY1RgUDReYAo6VWUCZAJgBTMFMQBvU2I=
-				//365//ADZUNlYwVTkFY1RgUDReYAo6VWUCZAJgBTMFNgBlU2Y=
-				//180//ADZUNlYwVTkFY1RgUDReYAo6VWUCZAJgBTQFPABiU2Y=
-				//90//ADZUNlYwVTkFY1RgUDReYAo6VWUCZAJgBTQFPQBiU24=
-				//月月升//ADZUNlYwVTkFY1RgUDReYAo6VWUCZAJgBTQFNgBuU2A=
+				// 540//ADZUNlYwVTkFY1RgUDReYAo6VWUCZAJgBTMFMQBvU2I=
+				// 365//ADZUNlYwVTkFY1RgUDReYAo6VWUCZAJgBTMFNgBlU2Y=
+				// 180//ADZUNlYwVTkFY1RgUDReYAo6VWUCZAJgBTQFPABiU2Y=
+				// 90//ADZUNlYwVTkFY1RgUDReYAo6VWUCZAJgBTQFPQBiU24=
+				// 月月升//ADZUNlYwVTkFY1RgUDReYAo6VWUCZAJgBTQFNgBuU2A=
 				conn.data("period_Id", item);
 				doc = conn.post();
 				int count = 0;
@@ -218,15 +215,15 @@ public class DataParseUtils {
 							if (count2 == 0) {
 								jr.setName(e2.html());
 							} else if (count2 == 1) {
-								BigDecimal amount=new BigDecimal(e2.html().replaceAll(",", "").replaceAll("元", ""));
+								BigDecimal amount = new BigDecimal(e2.html().replaceAll(",", "").replaceAll("元", ""));
 								jr.setAmount(amount);
-								sum=sum.add(amount);
-								sum2=sum2.add(amount);
+								sum = sum.add(amount);
+								sum2 = sum2.add(amount);
 								break;
 							}
 							count2++;
 						}
-						//System.out.println(jr);
+						// System.out.println(jr);
 						records.add(jr);
 						record2.add(jr);
 					}
@@ -236,15 +233,41 @@ public class DataParseUtils {
 				if (count < 11) {
 					break;
 				}
-				//System.out.println("--------------");
+				// System.out.println("--------------");
 			}
 			System.out.println("size=" + record2.size());
-			System.out.println("sum2="+sum2);
-			System.out.println("avg="+(sum2.divide(new BigDecimal(String.valueOf(record2.size())),0, BigDecimal.ROUND_HALF_UP)));
+			System.out.println("sum2=" + sum2);
+			System.out.println("avg="
+					+ (sum2.divide(new BigDecimal(String.valueOf(record2.size())), 0, BigDecimal.ROUND_HALF_UP)));
 		}
 		System.out.println("sum size=" + records.size());
-		System.out.println("sum="+sum);
-		System.out.println("sum avg="+(sum.divide(new BigDecimal(String.valueOf(records.size())),0, BigDecimal.ROUND_HALF_UP)));
+		System.out.println("sum=" + sum);
+		System.out.println(
+				"sum avg=" + (sum.divide(new BigDecimal(String.valueOf(records.size())), 0, BigDecimal.ROUND_HALF_UP)));
 		return records;
+	}
+
+	public static List<String> initKey(String url) {
+		List<String> result=new ArrayList<String>();
+		Document doc = null;
+		Connection conn = null;
+		try {
+			conn = Jsoup.connect(url);
+			doc = conn.post();
+			//Elements root=doc.getElementsByTag("div");
+			Elements root=doc.select("div[class=index_main w1180 clearfix]").get(1).select("a").select("[href^=https]");
+			Iterator<Element> it=root.iterator();
+			while(it.hasNext()){
+				Element e=it.next();
+				String item=e.attr("href").split("\\?")[1].split("\\&")[0].substring(10);
+				result.add(item);
+				System.out.println(item);
+			}
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ArrayList<String>();
+		}
+
 	}
 }

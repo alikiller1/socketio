@@ -188,7 +188,7 @@ public class DataParseUtils {
 			List<JoinRecord> record2 = new ArrayList<JoinRecord>();
 			for (int i = 1; i < 100; i++) {
 				try {
-					Thread.sleep(300);
+					Thread.sleep(400);
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

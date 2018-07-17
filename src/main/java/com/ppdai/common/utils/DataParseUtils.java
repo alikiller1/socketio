@@ -21,7 +21,7 @@ import com.ppdai.chatroom.data.JoinRecord;
 import com.ppdai.chatroom.data.LoanInfo;
 
 public class DataParseUtils {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		// String url = "http://invest.ppdai.com/loan/list_safe_s1_p1?Rate=0";
 		// String s="我的http://www.ppdai.com/list/17025228";
 		// System.out.println(filterLoanInfoUrl(s));
@@ -33,7 +33,7 @@ public class DataParseUtils {
 		// https://member.niwodai.com/portal/inteBid/joinRecoredPage.do
 		queryJoinRecord("https://member.niwodai.com/portal/inteBid/joinRecoredPage.do",
 				"http://www.niwodai.com/portal/getIntebidInfo.do");
-		// initKey("http://www.niwodai.com/portal/getIntebidInfo.do");
+//		 initKey("http://www.niwodai.com/portal/getIntebidInfo.do");
 	}
 	//44
 	/***
@@ -281,10 +281,18 @@ public class DataParseUtils {
 		conn = Jsoup.connect(url).timeout(5000);
 		doc = conn.post();
 		// Elements root=doc.getElementsByTag("div");
-		Elements root = doc.select("div[class=index_main w1180 clearfix]").get(1).select("a").select("[href^=https]");
+		Elements root = doc.select("div[class=index_main w1180 clearfix]").get(0).select("a").select("[href^=https]");
 		Iterator<Element> it = root.iterator();
 		while (it.hasNext()) {
 			Element e = it.next();
+			String item = e.attr("href").split("\\?")[1].split("\\&")[0].substring(10);
+			result.add(item);
+			System.out.println(item);
+		}
+		Elements root2 = doc.select("div[class=index_main w1180 clearfix]").get(1).select("a").select("[href^=https]");
+		Iterator<Element> it2 = root2.iterator();
+		while (it2.hasNext()) {
+			Element e = it2.next();
 			String item = e.attr("href").split("\\?")[1].split("\\&")[0].substring(10);
 			result.add(item);
 			System.out.println(item);

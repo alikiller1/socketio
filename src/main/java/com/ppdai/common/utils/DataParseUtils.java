@@ -35,6 +35,7 @@ public class DataParseUtils {
 				"http://www.niwodai.com/portal/getIntebidInfo.do");
 		// initKey("http://www.niwodai.com/portal/getIntebidInfo.do");
 	}
+	//dd
 	/***
 	 * 查询借款列表
 	 * 
